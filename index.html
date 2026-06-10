@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crizac Team Potluck</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
+</head>
+
+<body>
+    <!-- Corporate Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <span class="brand-icon">🏢</span>
+                <span class="brand-text">Crizac Life</span>
+            </div>
+            <div class="nav-links">
+                <span class="nav-item active" id="nav-events">Events</span>
+                <span class="nav-item" id="nav-team">Team</span>
+                <span class="nav-item" id="nav-gallery">Gallery</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Event Hero Section -->
+        <header class="hero">
+            <div class="hero-content">
+                <div class="badge">Office Gathering</div>
+                <h1 class="main-title">Monday Potluck <span>2026</span></h1>
+                <p class="subtitle">Join us for a wonderful afternoon of home-cooked meals, great conversations, and
+                    team bonding.</p>
+                <div class="event-details">
+                    <div class="detail-item">
+                        <span class="icon">📅</span>
+                        <div>
+                            <strong>Date</strong>
+                            <span>June 15, Monday</span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <span class="icon">📍</span>
+                        <div>
+                            <strong>Location</strong>
+                            <span>Main Cafeteria</span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <span class="icon">👥</span>
+                        <div>
+                            <strong>Attendees</strong>
+                            <span>17 Members</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Events View -->
+        <div id="view-events">
+            <div class="section-header">
+                <h2>The Menu</h2>
+                <p>Track what everyone is bringing and their preparation status.</p>
+            </div>
+            <div class="menu-grid" id="menu-grid">
+                <!-- Cards will be populated by JS -->
+            </div>
+        </div>
+
+        <!-- Team View -->
+        <div id="view-team" style="display: none;">
+            <div class="section-header">
+                <h2>Our Amazing Team</h2>
+                <p>The wonderful people participating in the potluck.</p>
+            </div>
+            <div class="team-grid" id="team-grid">
+                <!-- Team cards populated by JS -->
+            </div>
+        </div>
+
+        <!-- Gallery View -->
+        <div id="view-gallery" style="display: none;">
+            <div class="section-header">
+                <h2>The Menu Gallery</h2>
+                <p>A feast for the eyes.</p>
+            </div>
+            <div class="menu-grid" id="gallery-grid">
+                <!-- Gallery cards populated by JS -->
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-banner">
+                <p><strong>Crizac Potluck</strong> — Let's enjoy, share and make it a memorable day! ❤️</p>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--gray-600);">🌟 Special thanks to
+                    <strong>Meghaa</strong> for organizing this wonderful event!</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal for updating progress -->
+    <div id="progress-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Update Status</h2>
+                <span class="close-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="modal-info">
+                    <span class="info-label">Dish</span>
+                    <span id="modal-food" class="info-value"></span>
+                </div>
+
+                <div class="progress-form">
+                    <div class="form-group">
+                        <label for="progress-status">Current Stage</label>
+                        <select id="progress-status">
+                            <option value="Not Started">Not Started</option>
+                            <option value="Shopping Done">Shopping Done</option>
+                            <option value="Preparing">Preparing</option>
+                            <option value="Cooking">Cooking</option>
+                            <option value="Ready">Ready</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Readiness Percentage</label>
+                        <div class="progress-bar-container">
+                            <input type="range" id="progress-percentage" min="0" max="100" value="0">
+                            <span id="progress-percentage-val" class="percentage-badge">0%</span>
+                        </div>
+                    </div>
+
+                    <button id="save-progress" class="save-btn">Save Updates</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
