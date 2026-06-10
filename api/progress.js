@@ -14,38 +14,37 @@ module.exports = async function handler(request, response) {
     return;
   }
 
-  const BIN_ID = process.env.JSONBIN_BIN_ID;
-  const API_KEY = process.env.JSONBIN_API_KEY;
+  const SUPABASE_URL = process.env.NEXT_PUBLIC_CRIZAC_POTLACK_URL || process.env.SUPABASE_URL;
+  const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_CRIZAC_POTLACK_ANON_KEY || process.env.SUPABASE_ANON_KEY;
 
-  if (!BIN_ID || !API_KEY) {
-    return response.status(500).json({ error: 'Missing JSONBin credentials in environment variables.' });
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    return response.status(500).json({ error: 'Missing Supabase credentials in environment variables.' });
   }
 
-  // GET request - Fetch current progress from JSONBin
+  // GET request - Fetch current progress from Supabase
   if (request.method === 'GET') {
     try {
-      const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/progress?select=*`, {
         method: 'GET',
         headers: {
-          'X-Master-Key': API_KEY
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
         }
       });
       
-      const json = await res.json();
+      const data = await res.json();
       
       if (!res.ok) {
-        return response.status(res.status).json({ error: json.message });
+        return response.status(res.status).json({ error: data.message || 'Error fetching data' });
       }
 
-      // JSONBin wraps data in a 'record' object
-      const data = json.record || [];
       return response.status(200).json({ message: 'success', data: data });
     } catch (error) {
       return response.status(500).json({ error: error.message });
     }
   }
 
-  // POST request - Update progress in JSONBin
+  // POST request - Update progress in Supabase (Upsert)
   if (request.method === 'POST') {
     try {
       const { id, status, progress } = request.body;
@@ -54,53 +53,21 @@ module.exports = async function handler(request, response) {
         return response.status(400).json({ error: 'Missing required fields' });
       }
 
-      // 1. Fetch current data first
-      const getRes = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-        method: 'GET',
-        headers: {
-          'X-Master-Key': API_KEY
-        }
-      });
-      
-      let currentData = [];
-      if (getRes.ok) {
-        const getJson = await getRes.json();
-        currentData = getJson.record || [];
-      } else {
-         // If it's empty or hasn't been initialized, we might get an error, but let's assume it's an array
-         if (getRes.status !== 404) {
-             const errJson = await getRes.json();
-             return response.status(getRes.status).json({ error: errJson.message });
-         }
-      }
-
-      // Ensure it's an array
-      if (!Array.isArray(currentData)) {
-          currentData = [];
-      }
-
-      // 2. Update or insert the new item
-      const itemIndex = currentData.findIndex(item => item.id === id);
-      if (itemIndex > -1) {
-          currentData[itemIndex] = { id, status, progress };
-      } else {
-          currentData.push({ id, status, progress });
-      }
-
-      // 3. Save the updated data back to JSONBin
-      const putRes = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-        method: 'PUT',
+      // Upsert the new item
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/progress`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Master-Key': API_KEY
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'resolution=merge-duplicates'
         },
-        body: JSON.stringify(currentData)
+        body: JSON.stringify({ id, status, progress })
       });
 
-      const putJson = await putRes.json();
-      
-      if (!putRes.ok) {
-        return response.status(putRes.status).json({ error: putJson.message });
+      if (!res.ok) {
+        const errorData = await res.json();
+        return response.status(res.status).json({ error: errorData.message || 'Error updating data' });
       }
 
       return response.status(200).json({ message: 'success', id });

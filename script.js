@@ -41,22 +41,56 @@ const progressPercentageVal = document.getElementById('progress-percentage-val')
 
 let currentEditingId = null;
 
-// Initialize data from local storage if available
-function loadData() {
-    const savedData = localStorage.getItem('potluckData');
-    if (savedData) {
-        const parsedData = JSON.parse(savedData);
-        menuItems.forEach((item, index) => {
-            if (parsedData[index]) {
-                item.status = parsedData[index].status;
-                item.progress = parsedData[index].progress;
-            }
-        });
+// Initialize data from backend API
+async function loadData() {
+    try {
+        const res = await fetch('/api/progress');
+        if (res.ok) {
+            const json = await res.json();
+            const data = json.data || [];
+            
+            menuItems.forEach(item => {
+                const savedItem = data.find(d => d.id === item.id);
+                if (savedItem) {
+                    item.status = savedItem.status;
+                    item.progress = savedItem.progress;
+                }
+            });
+            
+            // Re-render the UI after data is loaded
+            renderGrid();
+            renderTeamGrid();
+            renderGalleryGrid();
+        } else {
+            console.error('Failed to load data:', await res.text());
+        }
+    } catch (error) {
+        console.error('Error fetching data:', error);
     }
 }
 
-function saveData() {
-    localStorage.setItem('potluckData', JSON.stringify(menuItems));
+async function saveData(item) {
+    try {
+        const res = await fetch('/api/progress', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: item.id,
+                status: item.status,
+                progress: item.progress
+            })
+        });
+        
+        if (!res.ok) {
+            console.error('Failed to save data:', await res.text());
+            alert("Failed to save data. Please try again.");
+        }
+    } catch (error) {
+        console.error('Error saving data:', error);
+        alert("Failed to save data. Please try again.");
+    }
 }
 
 function getStatusClass(status) {
@@ -209,23 +243,29 @@ progressStatusInput.addEventListener('change', (e) => {
     progressPercentageVal.textContent = `${progressPercentageInput.value}%`;
 });
 
-saveBtn.addEventListener('click', () => {
+saveBtn.addEventListener('click', async () => {
     if (currentEditingId === null) return;
 
     const itemIndex = menuItems.findIndex(i => i.id === currentEditingId);
     if (itemIndex > -1) {
-        menuItems[itemIndex].status = progressStatusInput.value;
-        menuItems[itemIndex].progress = parseInt(progressPercentageInput.value);
-        saveData();
+        const item = menuItems[itemIndex];
+        
+        // Optimistic UI update
+        item.status = progressStatusInput.value;
+        item.progress = parseInt(progressPercentageInput.value);
+        
         renderGrid();
         renderTeamGrid();
         renderGalleryGrid();
         closeModal();
+        
+        // Save to backend
+        await saveData(item);
     }
 });
 
-// Init
-loadData();
+// Init - render initially with default state, then load from backend
 renderGrid();
 renderTeamGrid();
 renderGalleryGrid();
+loadData();
