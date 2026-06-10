@@ -14,8 +14,8 @@ module.exports = async function handler(request, response) {
     return;
   }
 
-  const SUPABASE_URL = process.env.NEXT_PUBLIC_CRIZAC_POTLACK_URL || process.env.SUPABASE_URL;
-  const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_CRIZAC_POTLACK_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+  const SUPABASE_URL = process.env.NEXT_PUBLIC_CRIZAC_POTLACKSUPABASE_URL || process.env.SUPABASE_URL;
+  const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_CRIZAC_POTLACKSUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
 
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
     return response.status(500).json({ error: 'Missing Supabase credentials in environment variables.' });
