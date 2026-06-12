@@ -1,7 +1,7 @@
 const menuItems = [
     { id: 1, name: "Subham", food: "Chicken Momo", img: "https://images.unsplash.com/photo-1625220194771-7ebdea0b70b9?auto=format&fit=crop&w=400&q=80", status: "Not Started", progress: 0 },
     { id: 2, name: "Indra", food: "Veg Noodles", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdh-JpQtxJcT7Q8SOYN7vNZeqQKUScE1HF8Q&s", status: "Not Started", progress: 0 },
-    { id: 3, name: "Meghaa", food: "Chilli paneer", img: "https://instamart-media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_960,w_960//InstamartAssets/chilli_paneer.webp?updatedAt=1727161410434", status: "Not Started", progress: 0 },
+    { id: 3, name: "Meghaa", food: "Chilli Chicken", img: "https://images.slurrp.com/prod/recipe_images/transcribe/side%20dish/Chilli_Chicken.webp?impolicy=slurrp-20210601&width=1200&height=900&q=75", status: "Not Started", progress: 0 },
     { id: 4, name: "Anita", food: "Kerala fish fry", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTg_jkRBlV-TQjXn56fggbgbgi4_j9H2kNmcQ&s", status: "Not Started", progress: 0 },
     { id: 5, name: "Piyo", food: "Lemon Rice", img: "https://feelgoodfoodie.net/wp-content/uploads/2025/02/Lemon-Rice-11-500x500.jpg", status: "Not Started", progress: 0 },
     { id: 6, name: "Piyo", food: "Butter Garlic Chicken", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8OA8O1QXEuifRujq6Ne1ZwcnHpGtNzWkRNw&s", status: "Not Started", progress: 0 },
