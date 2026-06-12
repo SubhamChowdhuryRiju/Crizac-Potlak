@@ -18,6 +18,27 @@ const menuItems = [
     { id: 17, name: "Kusum", food: "Special Aloo dom", img: "https://lh6.googleusercontent.com/proxy/eERvFKLqJpRqGZE5xTotdBhK-yS090R6B4aVtoXslyI1nFrfDoPSZeXfnDxlaHbSJ9SXukbOm-6mOpQdLznOyTEtUAzOdrnMBHo", status: "Not Started", progress: 0 },
     { id: 18, name: "Sibendu Da", food: "Kalakand", img: "https://www.nestleprofessional.in/sites/default/files/2022-07/Kalakand-420x330.webp", status: "Not Started", progress: 0 }
 ];
+
+const userCredentials = [
+    { username: "Subham", password: "unique" },
+    { username: "Indra", password: "indra789" },
+    { username: "Meghaa", password: "meghaa456" },
+    { username: "Anita", password: "anita_pass" },
+    { username: "Piyo", password: "piyo!2026" },
+    { username: "Raju", password: "raju#potluck" },
+    { username: "Sumit", password: "sumit@123" },
+    { username: "Siddhant", password: "sid_food" },
+    { username: "Sandip", password: "sandip999" },
+    { username: "Satyaki", password: "satya_55" },
+    { username: "Subham 2", password: "subham2_xyz" },
+    { username: "Priyanka", password: "priya!abc" },
+    { username: "Sourav", password: "sourav_11" },
+    { username: "Trisha", password: "trisha_90" },
+    { username: "Kunal", password: "kunal_pass" },
+    { username: "Kusum", password: "kusum_cooks" },
+    { username: "Sibendu Da", password: "sibendu_da" }
+];
+
 const menuGrid = document.getElementById('menu-grid');
 const teamGrid = document.getElementById('team-grid');
 const galleryGrid = document.getElementById('gallery-grid');
@@ -203,6 +224,9 @@ function openModal(id) {
     progressPercentageInput.value = item.progress;
     progressPercentageVal.textContent = `${item.progress}%`;
 
+    document.getElementById('login-username').value = '';
+    document.getElementById('login-password').value = '';
+
     modal.style.display = 'flex';
 }
 
@@ -250,6 +274,20 @@ saveBtn.addEventListener('click', async () => {
     if (itemIndex > -1) {
         const item = menuItems[itemIndex];
         
+        const inputUsername = document.getElementById('login-username').value.trim();
+        const inputPassword = document.getElementById('login-password').value.trim();
+
+        if (inputUsername.toLowerCase() !== item.name.toLowerCase()) {
+            alert("You are not the right person for the update status.");
+            return;
+        }
+
+        const validUser = userCredentials.find(u => u.username.toLowerCase() === inputUsername.toLowerCase() && u.password === inputPassword);
+        if (!validUser) {
+            alert("Invalid credentials.");
+            return;
+        }
+
         // Optimistic UI update
         item.status = progressStatusInput.value;
         item.progress = parseInt(progressPercentageInput.value);
